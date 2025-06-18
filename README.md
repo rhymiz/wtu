@@ -13,6 +13,7 @@ A comprehensive set of bash utilities to simplify and enhance your Git worktree 
 - **Batch operations** - Create worktrees for all remote branches at once
 - **Smart defaults** - Sensible naming conventions and directory organization
 - **Colorized output** - Clear, color-coded feedback for all operations
+- **Shell completion** - Tab completion support for bash and zsh
 
 ## 📋 Prerequisites
 
@@ -37,6 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/rhymiz/wtu/main/install.sh | bash
 The installer will:
 - Check Git version compatibility (2.5+ required)
 - Detect your shell (bash/zsh) and configure it automatically
+- Install shell completions for tab completion support
 - Optionally configure worktree settings
 - Install from local file or download from GitHub
 - Work on both macOS and Linux
@@ -280,6 +282,47 @@ wt-cd hotfix/critical-bug
 git add . && git commit -m "Fix critical bug"
 git push origin hotfix/critical-bug
 wt-remove hotfix/critical-bug
+```
+
+## 🔌 Shell Completion
+
+Tab completion is automatically installed and configured by the install script. If you need to manually set it up:
+
+### Bash Completion
+
+```bash
+# Download completion file
+curl -o ~/.wtu-completions.bash https://raw.githubusercontent.com/rhymiz/wtu/main/completions/bash/wtu-completions.bash
+
+# The main script will automatically source it
+```
+
+### Zsh Completion
+
+```bash
+# Create completion directory
+mkdir -p ~/.wtu/completions/zsh
+
+# Download completion file
+curl -o ~/.wtu/completions/zsh/_wtu https://raw.githubusercontent.com/rhymiz/wtu/main/completions/zsh/_wtu
+
+# The main script will automatically add to fpath
+```
+
+### What Can Be Completed
+
+- **Branch names** - When creating or switching to worktrees
+- **Remote branches** - When adding remote worktrees
+- **Worktree numbers** - When using `wt-cd` with list numbers
+- **Remote names** - When specifying which remote to use
+- **File paths** - When removing worktrees by path
+
+Example usage:
+```bash
+wt-add fea<TAB>              # Completes to feature branches
+wt-cd <TAB>                  # Shows all worktree branches and numbers
+wt-add-remote origin/<TAB>   # Shows all origin branches
+wt-remove <TAB>              # Shows current worktrees
 ```
 
 ## 💡 Tips and Tricks

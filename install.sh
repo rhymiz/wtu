@@ -118,6 +118,52 @@ chmod +r "$INSTALL_PATH"
 
 echo -e "${GREEN}✓ Utilities installed to: $INSTALL_PATH${NC}"
 
+# Install completions
+echo
+echo -e "${BLUE}Installing shell completions...${NC}"
+
+if [ "$SOURCE_TYPE" = "local" ] && [ -d "completions" ]; then
+    # Install from local completions
+    if [ -n "$BASH_VERSION" ]; then
+        if [ -f "completions/bash/wtu-completions.bash" ]; then
+            cp "completions/bash/wtu-completions.bash" "$HOME/.wtu-completions.bash"
+            echo -e "${GREEN}✓ Bash completions installed${NC}"
+        fi
+    elif [ -n "$ZSH_VERSION" ]; then
+        if [ -f "completions/zsh/_wtu" ]; then
+            mkdir -p "$HOME/.wtu/completions/zsh"
+            cp "completions/zsh/_wtu" "$HOME/.wtu/completions/zsh/"
+            echo -e "${GREEN}✓ Zsh completions installed${NC}"
+        fi
+    fi
+else
+    # Download completions from GitHub
+    if [ -n "$BASH_VERSION" ]; then
+        echo -e "${BLUE}Downloading bash completions...${NC}"
+        if command -v curl &> /dev/null; then
+            curl -fsSL "https://raw.githubusercontent.com/rhymiz/wtu/main/completions/bash/wtu-completions.bash" -o "$HOME/.wtu-completions.bash" 2>/dev/null && \
+                echo -e "${GREEN}✓ Bash completions installed${NC}" || \
+                echo -e "${YELLOW}⚠ Could not download bash completions${NC}"
+        elif command -v wget &> /dev/null; then
+            wget -q "https://raw.githubusercontent.com/rhymiz/wtu/main/completions/bash/wtu-completions.bash" -O "$HOME/.wtu-completions.bash" 2>/dev/null && \
+                echo -e "${GREEN}✓ Bash completions installed${NC}" || \
+                echo -e "${YELLOW}⚠ Could not download bash completions${NC}"
+        fi
+    elif [ -n "$ZSH_VERSION" ]; then
+        echo -e "${BLUE}Downloading zsh completions...${NC}"
+        mkdir -p "$HOME/.wtu/completions/zsh"
+        if command -v curl &> /dev/null; then
+            curl -fsSL "https://raw.githubusercontent.com/rhymiz/wtu/main/completions/zsh/_wtu" -o "$HOME/.wtu/completions/zsh/_wtu" 2>/dev/null && \
+                echo -e "${GREEN}✓ Zsh completions installed${NC}" || \
+                echo -e "${YELLOW}⚠ Could not download zsh completions${NC}"
+        elif command -v wget &> /dev/null; then
+            wget -q "https://raw.githubusercontent.com/rhymiz/wtu/main/completions/zsh/_wtu" -O "$HOME/.wtu/completions/zsh/_wtu" 2>/dev/null && \
+                echo -e "${GREEN}✓ Zsh completions installed${NC}" || \
+                echo -e "${YELLOW}⚠ Could not download zsh completions${NC}"
+        fi
+    fi
+fi
+
 # Detect shell config file
 SHELL_CONFIG=$(detect_shell_config)
 echo

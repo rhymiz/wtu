@@ -1,0 +1,90 @@
+#compdef wt-add wt-add-remote wt-list wt-cd wt-remove wt-status wt-clean wt-open wt-switch wt-pr wt-add-all-remote wt-help wta wtl wtc wtr wts
+
+# Zsh completion for Git Worktree Utilities
+
+# Helper to get branch names
+_wtu_branches() {
+    local branches
+    branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads/ 2>/dev/null)"})
+    _describe 'branch' branches
+}
+
+# Helper to get worktree branches
+_wtu_worktree_branches() {
+    local branches
+    branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^branch/ {print substr($0, 8)}')"})
+    _describe 'worktree branch' branches
+}
+
+# Helper to get worktree numbers
+_wtu_worktree_numbers() {
+    local count=$(git worktree list 2>/dev/null | wc -l)
+    local numbers=($(seq 1 $count))
+    _describe 'worktree number' numbers
+}
+
+# Helper to get remote branches
+_wtu_remote_branches() {
+    local branches
+    branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/remotes/ 2>/dev/null)"})
+    _describe 'remote branch' branches
+}
+
+# Helper to get remotes
+_wtu_remotes() {
+    local remotes
+    remotes=(${(f)"$(git remote 2>/dev/null)"})
+    _describe 'remote' remotes
+}
+
+# Main completion function
+_wtu() {
+    local context state line
+    typeset -A opt_args
+
+    case "$service" in
+        wt-add|wta)
+            _arguments \
+                '1:branch name:_wtu_branches' \
+                '2:worktree name:()'
+            ;;
+            
+        wt-add-remote)
+            _arguments \
+                '1:remote branch:_wtu_remote_branches' \
+                '2:local branch name:()'
+            ;;
+            
+        wt-cd|wtc)
+            _alternative \
+                'branches:worktree branch:_wtu_worktree_branches' \
+                'numbers:worktree number:_wtu_worktree_numbers'
+            ;;
+            
+        wt-remove|wtr)
+            _alternative \
+                'branches:worktree branch:_wtu_worktree_branches' \
+                'paths:worktree path:_path_files -/'
+            ;;
+            
+        wt-open)
+            _wtu_worktree_branches
+            ;;
+            
+        wt-pr)
+            _message 'pull request number'
+            ;;
+            
+        wt-add-all-remote)
+            _arguments \
+                '1::remote name:_wtu_remotes'
+            ;;
+            
+        wt-list|wtl|wt-status|wts|wt-clean|wt-switch|wt-help)
+            # No arguments
+            _message 'no arguments'
+            ;;
+    esac
+}
+
+_wtu "$@"

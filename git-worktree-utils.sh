@@ -367,4 +367,36 @@ alias wtr='wt-remove'
 alias wtc='wt-cd'
 alias wts='wt-status'
 
+# Load completions if available
+if [ -n "$BASH_VERSION" ]; then
+    # Bash completion
+    # Check common locations
+    for completion_file in \
+        "$HOME/.wtu-completions.bash" \
+        "${BASH_SOURCE%/*}/completions/bash/wtu-completions.bash" \
+        "/usr/local/share/wtu/completions/bash/wtu-completions.bash" \
+        "/usr/share/wtu/completions/bash/wtu-completions.bash"; do
+        if [ -f "$completion_file" ]; then
+            source "$completion_file"
+            break
+        fi
+    done
+elif [ -n "$ZSH_VERSION" ]; then
+    # Zsh completion
+    # Add completion paths
+    for completion_dir in \
+        "$HOME/.wtu/completions/zsh" \
+        "${0:A:h}/completions/zsh" \
+        "/usr/local/share/wtu/completions/zsh" \
+        "/usr/share/wtu/completions/zsh"; do
+        if [ -d "$completion_dir" ]; then
+            fpath=("$completion_dir" $fpath)
+            break
+        fi
+    done
+    
+    # Ensure compinit is loaded
+    autoload -Uz compinit && compinit
+fi
+
 echo -e "${GREEN}Git Worktree Utilities loaded!${NC} Run ${BLUE}wt-help${NC} for usage."
