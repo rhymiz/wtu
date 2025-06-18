@@ -195,7 +195,7 @@ wt-switch
 ```
 
 #### `wt-open <branch>`
-Open a worktree in a new terminal window (supports iTerm, Terminal.app, gnome-terminal, konsole, xterm).
+Open a worktree in a new terminal window (supports Ghostty, Warp, iTerm, Terminal.app, gnome-terminal, konsole, xterm).
 
 ```bash
 wt-open feature/authentication

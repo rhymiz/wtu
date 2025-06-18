@@ -282,7 +282,13 @@ wt-open() {
     fi
     
     # Detect terminal and open new window/tab
-    if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+        # Ghostty terminal support
+        osascript -e "tell application \"Ghostty\" to activate" -e "tell application \"System Events\" to keystroke \"t\" using command down" -e "delay 0.5" -e "tell application \"System Events\" to keystroke \"cd $worktree_path\" & return"
+    elif [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
+        # Warp terminal support
+        osascript -e "tell application \"Warp\" to activate" -e "tell application \"System Events\" to keystroke \"t\" using command down" -e "delay 0.5" -e "tell application \"System Events\" to keystroke \"cd $worktree_path\" & return"
+    elif [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
         osascript -e "tell application \"iTerm\" to create window with default profile command \"cd $worktree_path && $SHELL\""
     elif [[ "$TERM_PROGRAM" == "Apple_Terminal" ]]; then
         osascript -e "tell application \"Terminal\" to do script \"cd $worktree_path\""
@@ -399,4 +405,3 @@ elif [ -n "$ZSH_VERSION" ]; then
     autoload -Uz compinit && compinit
 fi
 
-echo -e "${GREEN}Git Worktree Utilities loaded!${NC} Run ${BLUE}wt-help${NC} for usage."
