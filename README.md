@@ -22,6 +22,25 @@ A comprehensive set of bash utilities to simplify and enhance your Git worktree 
 
 ## 🛠️ Installation
 
+### Automated Install (Recommended)
+
+Use the install script for a guided installation:
+
+```bash
+# Download and run the installer
+curl -fsSL https://raw.githubusercontent.com/rhymiz/wtu/main/install.sh | bash
+
+# Or if you've cloned the repo
+./install.sh
+```
+
+The installer will:
+- Check Git version compatibility (2.5+ required)
+- Detect your shell (bash/zsh) and configure it automatically
+- Optionally configure worktree settings
+- Install from local file or download from GitHub
+- Work on both macOS and Linux
+
 ### Quick Install
 
 ```bash
